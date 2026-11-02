@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zora Mobile | المنتدى</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0507;--p:#150a0d;--p2:#1d0e12;--ln:#34161c;--red:#e11d2e;--tx:#f3e9ea;--mu:#a58d90}
+*{box-sizing:border-box;margin:0}body{font-family:Cairo,sans-serif;background:radial-gradient(900px 500px at 85% -10%,#4a0a14,transparent),var(--bg);color:var(--tx);min-height:100vh}
+a{color:inherit;text-decoration:none}
+header{position:sticky;top:0;z-index:5;background:#0a0507ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.hd{max-width:1000px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.logo{font-weight:900;font-size:24px;letter-spacing:.5px}.logo b{color:var(--red)}
+.st{margin-inline-start:auto;display:flex;gap:16px;font-size:13px;color:var(--mu)}.st b{color:var(--tx);font-size:15px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-inline-end:5px;box-shadow:0 0 8px #22c55e}
+button,.btn{font:inherit;background:var(--red);color:#fff;border:0;border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:700;transition:.2s}
+button:hover{filter:brightness(1.15);box-shadow:0 0 18px #e11d2e66}button.g{background:var(--p2);border:1px solid var(--ln)}button.x{background:none;color:var(--mu);padding:2px 8px;font-size:12px}
+main{max-width:1000px;margin:auto;padding:22px 16px 60px;animation:in .45s ease}@keyframes in{from{opacity:0;transform:translateY(10px)}}
+h2{font-size:22px;margin-bottom:14px}.hero{padding:34px 22px;border:1px solid var(--ln);border-radius:14px;background:linear-gradient(120deg,#3a0911,var(--p));margin-bottom:22px}
+.hero h1{font-size:34px;font-weight:900}.hero p{color:var(--mu);margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:var(--p);border:1px solid var(--ln);border-inline-start:4px solid var(--c,var(--red));border-radius:10px;padding:16px;transition:.2s}
+a.card:hover{transform:translateY(-3px);background:var(--p2)}.card h3{font-size:17px}.card small{color:var(--mu)}
+.gh{margin:22px 0 10px;color:var(--mu);font-size:14px}
+.bd{background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);border:1px solid var(--c);border-radius:20px;padding:1px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.post{margin-bottom:12px}.post .m{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--mu);font-size:13px;margin-bottom:8px}.post p{white-space:pre-wrap;line-height:1.8}
+input,textarea,select{font:inherit;width:100%;background:#0f0709;color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:10px;margin-bottom:8px}input:focus,textarea:focus{outline:2px solid var(--red)}
+textarea{min-height:90px;resize:vertical}
+.ov{position:fixed;inset:0;background:#000b;display:grid;place-items:center;z-index:9;padding:16px}.box{background:var(--p);border:1px solid var(--ln);border-radius:14px;padding:24px;width:min(400px,100%);animation:in .25s}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1}.err{color:#ff7a85;font-size:13px;min-height:18px}
+.av{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-size:30px;font-weight:900;background:var(--c);color:#fff}
+.pf{display:flex;gap:16px;align-items:center;margin-bottom:18px}.row{display:flex;gap:8px}.row>*{width:auto}.row input{flex:1}
+.bar{display:flex;gap:10px;align-items:center}.empty{color:var(--mu);padding:20px;text-align:center;border:1px dashed var(--ln);border-radius:10px}
+@media(max-width:600px){.st{display:none}.hero h1{font-size:26px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header><div class="hd"><a class="logo" href="#/">ZORA <b>MOBILE</b></a>
+<div class="st"><span>الأعضاء <b id="nm">–</b></span><span><i class="dot"></i>متصل <b id="no">–</b></span></div>
+<div class="bar" id="au"></div></div></header>
+<main id="app"></main><div id="md"></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,addDoc,collection,query,where,getDocs,getCountFromServer,serverTimestamp,Timestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCqPJkUY5ExIbQuNvtj7RbjYLrD7IcyhqM",authDomain:"zora-mobile-2cad9.firebaseapp.com",projectId:"zora-mobile-2cad9",storageBucket:"zora-mobile-2cad9.firebasestorage.app",messagingSenderId:"1079524025952",appId:"1:1079524025952:web:4017dd5368adbaadddc505"});
+const auth=getAuth(app),db=getFirestore(app);
+const R={owner:['المالك','#ff2a3d'],deputy:['نائب','#ff8a00'],admin:['إداري','#f43f5e'],member:['عضو','#9ca3af'],
+L_fagoos:['قائد فاغوس','#facc15'],L_grove:['قائد جروف ستريت','#22c55e'],L_rifa:['قائد ريفا','#a855f7'],L_ballas:['قائد بالاس','#db2777'],L_aztecas:['قائد أزتيكاس','#38bdf8'],
+L_pls:['قائد شرطة لوس سانتوس','#2563eb'],L_plv:['قائد شرطة لاس فنتورس','#2563eb'],L_psf:['قائد شرطة سان فييرو','#2563eb'],L_cter:['قائد مكافحة الإرهاب','#1d4ed8']};
+const G=[['عام',[['news','الأخبار','أخبار السيرفر والتحديثات','#e11d2e'],['laws','القوانين','قوانين السيرفر','#e11d2e'],['suggestions','الاقتراحات','اقترح فكرة للسيرفر','#e11d2e']]],
+['العصابات',[['fagoos','فاغوس','#facc15'],['grove','جروف ستريت','#22c55e'],['rifa','ريفا','#a855f7'],['ballas','بالاس','#db2777'],['aztecas','أزتيكاس','#38bdf8']].map(a=>[a[0],a[1],'قسم العصابة',a[2]])],
+['الشرطة',[['pls','شرطة لوس سانتوس','#2563eb'],['plv','شرطة لاس فنتورس','#2563eb'],['psf','شرطة سان فييرو','#2563eb'],['cter','مكافحة الإرهاب','#1d4ed8']].map(a=>[a[0],a[1],'قسم الشرطة',a[2]])]];
+const SEC=Object.fromEntries(G.flatMap(g=>g[1]).map(s=>[s[0],s]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const staff=r=>['owner','deputy','admin'].includes(r),bd=r=>{const x=R[r]||R.member;return`<span class="bd" style="--c:${x[1]}">${x[0]}</span>`};
+const canPost=s=>me&&(staff(me.rank)||s=='suggestions'||me.rank=='L_'+s);
+const canDel=p=>me&&(p.uid==me.uid||staff(me.rank)||me.rank=='L_'+p.sec);
+const ago=t=>{if(!t)return'الآن';const m=(Date.now()-t.toMillis())/6e4;return m<1?'الآن':m<60?`قبل ${m|0} دقيقة`:m<1440?`قبل ${m/60|0} ساعة`:`قبل ${m/1440|0} يوم`};
+let me=null,reg=false;
+async function loadMe(u){if(!u){me=null;return}const s=await getDoc(doc(db,'users',u.uid));me=s.exists()?{uid:u.uid,...s.data()}:null}
+function bar(){$('#au').innerHTML=me?`<a href="#/u/${me.uid}">${esc(me.name)}</a> ${bd(me.rank)} <button class="g" id="lo">خروج</button>`:`<button id="li">دخول / تسجيل</button>`;
+$('#lo')&&($('#lo').onclick=()=>signOut(auth));$('#li')&&($('#li').onclick=modal)}
+async function stats(){try{const[a,b]=await Promise.all([getCountFromServer(collection(db,'users')),getCountFromServer(query(collection(db,'users'),where('lastSeen','>',Timestamp.fromMillis(Date.now()-12e4))))]);$('#nm').textContent=a.data().count;$('#no').textContent=b.data().count}catch(e){}}
+function modal(){let mode='in';const d=$('#md');const draw=()=>{d.innerHTML=`<div class="ov"><div class="box"><div class="tabs"><button class="${mode=='in'?'':'g'}" data-m="in">دخول</button><button class="${mode=='up'?'':'g'}" data-m="up">تسجيل جديد</button></div>
+<input id="un" placeholder="اسم المستخدم (إنجليزي أو أرقام)" autocomplete="username"><input id="pw" type="password" placeholder="كلمة المرور (6 أحرف أو أكثر)" autocomplete="current-password"><div class="err" id="er"></div>
+<div class="row"><button id="go" style="flex:1">${mode=='in'?'دخول':'إنشاء الحساب'}</button><button class="g" id="cl">إغلاق</button></div></div></div>`;
+d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;draw()});$('#cl').onclick=()=>d.innerHTML='';$('#go').onclick=go};
+const go=async()=>{const n=$('#un').value.trim(),p=$('#pw').value,er=$('#er');er.textContent='';
+if(!/^[A-Za-z0-9_]{3,20}$/.test(n))return er.textContent='الاسم من 3 إلى 20 حرف: إنجليزي وأرقام و _ فقط';if(p.length<6)return er.textContent='كلمة المرور أقل من 6 أحرف';
+const em=n.toLowerCase()+'@zora-mobile.app';try{if(mode=='in')await signInWithEmailAndPassword(auth,em,p);else{reg=true;const c=await createUserWithEmailAndPassword(auth,em,p);
+await setDoc(doc(db,'users',c.user.uid),{name:n,rank:'member',bio:'',createdAt:serverTimestamp(),lastSeen:serverTimestamp()});await loadMe(c.user);reg=false;bar();route()}
+d.innerHTML=''}catch(e){reg=false;er.textContent=/email-already/.test(e.code)?'هذا الاسم مستخدم':/credential|user-not-found|wrong-password/.test(e.code)?'الاسم أو كلمة المرور غلط':'صار خطأ: '+e.code}};draw()}
+const V=h=>{$('#app').innerHTML=h;$('#app').style.animation='none';void $('#app').offsetWidth;$('#app').style.animation=''};
+async function route(){stats();const[,k,id]=location.hash.slice(1).split('/');try{k=='s'&&SEC[id]?await secPage(id):k=='u'&&id?await prof(id):home()}catch(e){V(`<div class="empty">تعذر التحميل: ${esc(e.code||e.message)}</div>`)}scrollTo(0,0)}
+function home(){V(`<div class="hero"><h1>منتدى زورا موبايل</h1><p>الأخبار والقوانين وأقسام العصابات والشرطة في مكان واحد.</p></div>`+G.map(g=>`<div class="gh">${g[0]}</div><div class="grid">${g[1].map(s=>`<a class="card" href="#/s/${s[0]}" style="--c:${s[3]}"><h3>${s[1]}</h3><small>${s[2]}</small></a>`).join('')}</div>`).join(''))}
+async function secPage(id){const s=SEC[id];const q=await getDocs(query(collection(db,'posts'),where('sec','==',id)));const ps=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts?.toMillis?.()||Date.now())-(a.ts?.toMillis?.()||Date.now()));
+V(`<h2 style="color:${s[3]}">${s[1]}</h2>${canPost(id)?`<div class="card" style="--c:${s[3]};margin-bottom:16px"><input id="pt" placeholder="العنوان"><textarea id="pb" placeholder="اكتب هنا..."></textarea><button id="ps">نشر</button></div>`:`<div class="empty" style="margin-bottom:16px">${me?'النشر في هذا القسم لقائده والإدارة فقط':'سجّل دخولك عشان تشارك'}</div>`}
+${ps.length?ps.map(p=>`<div class="card post" style="--c:${s[3]}"><div class="m"><a href="#/u/${p.uid}"><b>${esc(p.name)}</b></a>${bd(p.rank)}<span>${ago(p.ts)}</span>${canDel(p)?`<button class="x" data-d="${p.id}">حذف</button>`:''}</div><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p></div>`).join(''):'<div class="empty">ما فيه مواضيع بعد</div>'}`);
+$('#ps')&&($('#ps').onclick=async()=>{const t=$('#pt').value.trim(),b=$('#pb').value.trim();if(!t||!b)return;await addDoc(collection(db,'posts'),{sec:id,title:t.slice(0,120),body:b.slice(0,4000),uid:me.uid,name:me.name,rank:me.rank,ts:serverTimestamp()});secPage(id)});
+document.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{if(confirm('حذف الموضوع؟')){await deleteDoc(doc(db,'posts',b.dataset.d));secPage(id)}})}
+async function prof(uid){const u=await getDoc(doc(db,'users',uid));if(!u.exists())return V('<div class="empty">العضو غير موجود</div>');const d=u.data(),c=(R[d.rank]||R.member)[1],mine=me&&me.uid==uid;
+const w=(await getDocs(query(collection(db,'wall'),where('to','==',uid)))).docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(b.ts?.toMillis?.()||Date.now())-(a.ts?.toMillis?.()||Date.now()));
+V(`<div class="pf"><div class="av" style="--c:${c}">${esc(d.name[0].toUpperCase())}</div><div><h2 style="margin:0">${esc(d.name)}</h2>${bd(d.rank)}<div style="color:var(--mu);font-size:13px;margin-top:4px">${ago(d.lastSeen)} · آخر ظهور</div></div></div>
+<div class="card" style="--c:${c};margin-bottom:16px"><b>نبذة</b>${mine?`<textarea id="bio" style="margin-top:8px" placeholder="اكتب نبذة عنك">${esc(d.bio)}</textarea><button id="sb">حفظ</button>`:`<p style="margin-top:6px;white-space:pre-wrap">${esc(d.bio)||'ما كتب نبذة'}</p>`}</div>
+${me&&me.rank=='owner'&&!mine?`<div class="card" style="--c:${c};margin-bottom:16px"><b>تغيير الرتبة</b><div class="row" style="margin-top:8px"><select id="rk" style="flex:1">${Object.entries(R).map(([k,v])=>`<option value="${k}"${k==d.rank?' selected':''}>${v[0]}</option>`).join('')}</select><button id="sr">حفظ</button></div></div>`:''}
+<h2>الحائط</h2>${me?`<div class="row" style="margin-bottom:12px"><input id="wt" placeholder="اكتب رسالة على الحائط"><button id="sw">إرسال</button></div>`:''}
+${w.length?w.map(m=>`<div class="card post" style="--c:${(R[m.rank]||R.member)[1]}"><div class="m"><a href="#/u/${m.from}"><b>${esc(m.name)}</b></a>${bd(m.rank)}<span>${ago(m.ts)}</span>${me&&(m.from==me.uid||me.uid==uid||staff(me.rank))?`<button class="x" data-w="${m.id}">حذف</button>`:''}</div><p>${esc(m.text)}</p></div>`).join(''):'<div class="empty">الحائط فاضي</div>'}`);
+$('#sb')&&($('#sb').onclick=async()=>{await updateDoc(doc(db,'users',uid),{bio:$('#bio').value.slice(0,500)});me.bio=$('#bio').value;prof(uid)});
+$('#sr')&&($('#sr').onclick=async()=>{await updateDoc(doc(db,'users',uid),{rank:$('#rk').value});prof(uid)});
+$('#sw')&&($('#sw').onclick=async()=>{const t=$('#wt').value.trim();if(!t)return;await addDoc(collection(db,'wall'),{to:uid,from:me.uid,name:me.name,rank:me.rank,text:t.slice(0,500),ts:serverTimestamp()});prof(uid)});
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=async()=>{await deleteDoc(doc(db,'wall',b.dataset.w));prof(uid)})}
+onAuthStateChanged(auth,async u=>{if(reg)return;await loadMe(u);bar();route()});
+setInterval(()=>{if(me)updateDoc(doc(db,'users',me.uid),{lastSeen:serverTimestamp()}).catch(()=>{});stats()},6e4);
+setTimeout(()=>{if(me)updateDoc(doc(db,'users',me.uid),{lastSeen:serverTimestamp()}).catch(()=>{})},3e3);
+addEventListener('hashchange',route);bar();
+</script></body></html>
